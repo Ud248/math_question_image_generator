@@ -1,0 +1,6 @@
+matplotlib
+numpy
+openai
+fastapi
+aiohttp
+dotenv
