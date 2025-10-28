@@ -6,7 +6,7 @@ Yêu cầu: matplotlib, numpy
 import matplotlib.pyplot as plt
 import numpy as np
 import math
-
+from utils.normalize_angles_data import normalize_angles_data
 
 def draw_angle(angle_deg, vertex_name='O', ray1_name='A', ray2_name='B', vertex_label_color='black',
                ray1_color='blue', ray2_color='red',output_file='angle.png'):
@@ -109,7 +109,6 @@ def draw_angle(angle_deg, vertex_name='O', ray1_name='A', ray2_name='B', vertex_
     print(f"✓ File: {output_file}")
     return output_file
 
-
 def draw_multiple_angles(angles_data, output_prefix='angle'):
     """
     Vẽ nhiều góc cùng lúc
@@ -156,6 +155,58 @@ def draw_multiple_angles(angles_data, output_prefix='angle'):
 
     return files
 
+def draw_angles_from_json(angles_data):
+    """
+    Vẽ góc dựa trên dữ liệu JSON từ LLM
+    
+    Args:
+        angles_data: Dict (1 góc) hoặc List of dict (nhiều góc)
+    """
+    # ✅ Chuẩn hóa data thành list
+    angles_list = normalize_angles_data(angles_data)
+    
+    if not angles_list:
+        print("❌ No valid angle data to draw")
+        return
+    
+    print(f"\n🎨 Drawing {len(angles_list)} angle(s)...")
+    print("=" * 60)
+    
+    if len(angles_list) == 1:
+        # Vẽ 1 góc - dùng draw_angle
+        angle_info = angles_list[0]
+        print(f"📐 Drawing single angle: {angle_info.get('angle_deg', 'Unknown')}°")
+        
+        try:
+            fig = draw_angle(
+                angle_deg=angle_info.get('angle_deg'),
+                vertex_name=angle_info.get('vertex_name'),
+                ray1_name=angle_info.get('ray1_name'),
+                ray2_name=angle_info.get('ray2_name'),
+                vertex_label_color=angle_info.get('vertex_label_color'),
+                ray1_color=angle_info.get('ray1_color'),
+                ray2_color=angle_info.get('ray2_color')
+            )
+            print("✅ Single angle drawn successfully!")
+            return fig
+        except Exception as e:
+            print(f"❌ Error drawing single angle: {e}")
+            return None
+    
+    else:
+        # Vẽ nhiều góc - dùng draw_multiple_angles
+        print(f"📐 Drawing multiple angles:")
+        for i, angle_info in enumerate(angles_list, 1):
+            print(f"  {i}. Angle: {angle_info.get('angle_deg', 'Unknown')}° "
+                  f"(Vertex: {angle_info.get('vertex_name', 'N/A')})")
+        
+        try:
+            fig = draw_multiple_angles(angles_list)
+            print("✅ Multiple angles drawn successfully!")
+            return fig
+        except Exception as e:
+            print(f"❌ Error drawing multiple angles: {e}")
+            return None
 
 # ==================== DEMO USAGE ====================
 if __name__ == "__main__":

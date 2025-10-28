@@ -1,7 +1,5 @@
 from PIL import Image, ImageDraw, ImageFont, ImageColor
-
 import json
-
 
 def draw_circle_with_number(radius, number=None, color=(100, 149, 237, 255), font_path=None):
     """Vẽ 1 hình tròn có thể có hoặc không có số ở giữa (nền trong suốt + căn giữa chuẩn)"""
@@ -52,8 +50,6 @@ def draw_circle_with_number(radius, number=None, color=(100, 149, 237, 255), fon
         draw.text((text_x, text_y), text, font=font, fill="white")
 
     return img
-
-
 
 def combine_circles(circles, spacing=20):
     """Ghép danh sách hình tròn theo hàng ngang"""
@@ -129,7 +125,6 @@ def draw_circles_with_json_input(json_input, output_file='circles_output.png', r
     combined.save(output_file)
     print(f"Saved: {output_file}")
     return output_file
-
 
 # --- Demo ---
 if __name__ == "__main__":
