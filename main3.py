@@ -1,33 +1,22 @@
 import asyncio
 from llm.local_search import DeepSeekService
-from drawings.draw_circle import draw_circles_with_json_input
+from drawings.draw_column_calc import draw_column_calc_with_json_input
 from utils.parse_json_response import parse_json_response
-from prompts import EXTRACT_DATA_DRAW_CIRCLE_PROMPT
+from prompts import EXTRACT_DATA_DRAW_COLUMN_CALC_PROMPT
 
 async def main():
-    TYPE_EXERCISE = "Hoàn thành dãy số"
-    UNIT = "Các số 0, 1, 2, 3, 4, 5"
-    DETAIL ="""
-    Điền số thích hợp vào chỗ trống
-    Đáp án : Các số cần điền theo thứ tự từ trái qua phải là: 3, 2, 4, 1, 5
-
-    Tạo 2 hình ảnh 1 hình tròn có số 1 ở chính giữa 
-    Tạo 2 hình ảnh 1 hình tròn có số 2 ở chính giữa
-    Tạo 2 hình ảnh 1 hình tròn có số 3 ở chính giữa
-    Tạo 2 hình ảnh 1 hình tròn có số 4 ở chính giữa
-    Tạo 2 hình ảnh 1 hình tròn có số 5 ở chính giữa
-    Tạo 5 hình ảnh 1 hình tròn không in số
-    Thứ tư xuất hiện của các hình tròn tính từ trái sang phải:
-    - Hình tròn có số 1 ở chính giữa : [0, 5]
-    - Hình tròn có số 2 ở chính giữa : [1, 11]
-    - Hình tròn có số 3 ở chính giữa : [7, 12]
-    - Hình tròn có số 4 ở chính giữa : [3, 13]
-    - Hình tròn có số 5 ở chính giữa : [4, 9]
-    - Hình tròn không có số ở chính giữa : [2, 6, 8, 10, 14]
+    TYPE_EXERCISE = "Tính"
+    QUESTION = "Chọn phép đặt tính rồi tính đúng? (10đ). Đáp án: D"
+    DETAIL ="""   
+Hình ảnh phép tính:
+Hình A: Viết số hạng thứ 1 là 24 678 ở hàng trên, số hạng thứ 2 là 4 viết hàng dưới thẳng hàng với số 2 ở hàng chục nghìn của số hạng thứ 1. Dấu x ở giữa. Dấu kẻ ngang dưới số hạng thứ 2. Kết quả là 98 712.
+Hình B: Viết số hạng thứ 1 là 24 678 ở hàng trên, số hạng thứ 2 là 4 viết hàng dưới thẳng hàng với số 6 ở hàng trăm của số hạng thứ 1. Dấu x ở giữa. Dấu kẻ ngang dưới số 4. Kết quả là 98 712.
+Hình C: Viết số hạng thứ 1 là 24 678 ở hàng trên, số hạng thứ 2 là 4 viết hàng dưới thẳng hàng với số 7 ở hàng chục của số hạng thứ 1. Dấu x ở giữa. Dấu kẻ ngang dưới số 4. Kết quả là 98 712.
+Hình D: Viết số hạng thứ 1 là 24 678 ở hàng trên, số hạng thứ 2 là 4 viết hàng dưới thẳng hàng với số 8 ở hàng đơn của số hạng thứ 1. Dấu x ở giữa. Dấu kẻ ngang dưới số 4. Kết quả là 98 712.
     """
-    prompt = EXTRACT_DATA_DRAW_CIRCLE_PROMPT.format(
+    prompt = EXTRACT_DATA_DRAW_COLUMN_CALC_PROMPT.format(
         type_exercise=TYPE_EXERCISE,
-        unit=UNIT,
+        question=QUESTION,
         detail=DETAIL
     )
 
@@ -44,7 +33,7 @@ async def main():
         print(f"\n💬 Generated Prompt:")
         print("-" * 60)
         print(f"Loại bài: {TYPE_EXERCISE.strip()}")
-        print(f"Tên bài học: {UNIT.strip()}")
+        print(f"Đề bài: {QUESTION.strip()}")
         print(f"Mô tả hình vẽ: {DETAIL.strip()}")
         print("-" * 60)
         
@@ -67,7 +56,7 @@ async def main():
             
             # ✅ Vẽ hình dựa trên JSON response (tự động xử lý dict hoặc list)
             print("\n" + "=" * 60)
-            draw_circles_with_json_input(parsed, output_file='circles_output.png')
+            draw_column_calc_with_json_input(parsed, output_file='column_calc_output.png')
         else:
             print(response)
         

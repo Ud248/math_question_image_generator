@@ -102,3 +102,42 @@ Ví dụ đầu ra mong muốn:
     }}
 ]
 """
+
+EXTRACT_DATA_DRAW_COLUMN_CALC_PROMPT = """
+Dựa vào 2 đoạn văn bản sau:
+Dạng bài tập: {type_exercise}
+Ví dụ đề bài: {question}
+Mô tả bài tập: {detail}
+
+Hãy phân tích nội dung và trích xuất thông tin về các phép tính cột cần vẽ (có thể là 1 hoặc nhiều phép tính).
+Kết quả trả về dưới dạng một mảng JSON, trong đó mỗi phần tử là một phép tính với các trường sau:
+- num1 : str - Số thứ nhất
+- num2 : str - Số thứ hai
+- operator : str - Phép toán ('+', '-', '×')
+- result : str - Kết quả (nếu không có kết quả, Hãy tự tính toán và điền vào)
+- offset : int - Độ lệch của num2 (âm=trái, dương=phải, 0=chuẩn. Chỗ này hãy so sánh vị trí chữ số cuối cùng của num2 với num1 để xác định)
+- title : str - Tiêu đề (Là nhãn đáp án A, B, C... hoặc để trống nếu không có)
+
+Yêu cầu:
+- Chỉ trả về một mảng JSON hợp lệ, không kèm giải thích, văn bản hay bình luận.
+
+Ví dụ đầu ra mong muốn:
+[
+    {{
+        "num1": "24678",
+        "num2": "4",
+        "operator": "×",
+        "result": "98672",
+        "offset": -4,
+        "title": "A."
+    }},
+    {{
+        "num1": "24678",
+        "num2": "4",
+        "operator": "×",
+        "result": "98672",
+        "offset": -1,
+        "title": "B."
+    }}
+]
+"""

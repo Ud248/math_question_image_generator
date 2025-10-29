@@ -1,7 +1,7 @@
 import asyncio
 import json
 from llm.local_search import DeepSeekService
-from utils.draw_angle_func import draw_angles_from_json
+from drawings.draw_angle_func import draw_angles_from_json
 from utils.parse_json_response import parse_json_response
 from prompts import EXTRACT_DATA_DRAW_ANGLE_PROMPT
 
