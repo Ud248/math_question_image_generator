@@ -1,4 +1,4 @@
-# Angel Generator
+# Math Question Image Generator
 
 ## Mô tả
 
@@ -6,10 +6,13 @@
   Tạo hình ảnh các góc.
 
 - **main2.py**  
-  Tạo hình ảnh dạng bài điền vào dãy số trống.
+  Tạo hình ảnh dạng bài điền vào dãy số trống (Dãy số với mỗi số hình tròn, số cần điền trong hình tròn rỗng).
 
 - **main3.py**  
-  Tạo hình ảnh bài toán cộng, trừ, nhân đặt tính rồi tính.
+  Tạo hình ảnh bài toán cộng, trừ, nhân đặt tính rồi tính (Có hỗ trợ tạo sai vị trí cho số thứ 2).
+
+- **main4.py**  
+  Tạo hình ảnh bài toán chia đặt tính rồi tính (Có hỗ trợ tạo phép chia có dư).
 
 ## Hướng dẫn sử dụng
 

@@ -116,7 +116,7 @@ Kết quả trả về dưới dạng một mảng JSON, trong đó mỗi phần
 - operator : str - Phép toán ('+', '-', '×')
 - result : str - Kết quả (nếu không có kết quả, Hãy tự tính toán và điền vào)
 - offset : int - Độ lệch của num2 (âm=trái, dương=phải, 0=chuẩn. Chỗ này hãy so sánh vị trí chữ số cuối cùng của num2 với num1 để xác định)
-- title : str - Tiêu đề (Là nhãn đáp án A, B, C... hoặc để trống nếu không có)
+- title : str - Tiêu đề (Là nhãn đáp án A, B, C... hoặc để trống nếu không có, nếu là nhãn đáp án nhớ thêm dấu chấm sau chữ cái, ví dụ: "A.", "B.", ...)
 
 Yêu cầu:
 - Chỉ trả về một mảng JSON hợp lệ, không kèm giải thích, văn bản hay bình luận.
@@ -138,6 +138,76 @@ Ví dụ đầu ra mong muốn:
         "result": "98672",
         "offset": -1,
         "title": "B."
+    }}
+]
+"""
+
+EXTRACT_DATA_DRAW_COLUMN_DIVISION_PROMPT="""
+Dựa vào 2 đoạn văn bản sau:
+Dạng bài tập: {type_exercise}
+Ví dụ đề bài: {question}
+Mô tả bài tập: {detail}
+
+Hãy phân tích nội dung và trích xuất thông tin về các phép tính cột cần vẽ (có thể là 1 hoặc nhiều phép tính).
+Kết quả trả về dưới dạng một mảng JSON, trong đó mỗi phần tử là một phép tính với các trường sau:
+- dividend : str - Số bị chia (ví dụ: "34568")
+- divisor : str - Số chia (ví dụ: "6")
+- quotient : str - Thương (ví dụ: "5761")
+- step_offsets : list of tuple(
+    Danh sách các bước trung gian với độ lệch
+    Mỗi phần tử là một tuple (giá trị, độ lệch)
+    Giá trị của bước trung gian là string nên vẫn phải giữ số 0 ở đâu giá trị
+    Độ lệch sẽ thường không được cung cấp sẵn, bạn phải tự suy luận ra. Bằng cách dựa theo Mô tả bài tập, so sánh chữ số đầu tiên của giá trị bước trung gian với chữ số đầu tiên của số bị chia (mốc)
+    Ví dụ: [("45", 1), ("36", 2), ("08", 3), ("2", 4)]
+    độ_lệch: âm = trái, dương = phải, 0 = căn chỉnh
+)
+- remainder : str, optional - Số dư (nếu có)
+- title : str - Tiêu đề (Là nhãn đáp án A, B, C... hoặc để trống nếu không có, nếu là nhãn đáp án nhớ thêm dấu chấm sau chữ cái, ví dụ: "A.", "B.", ...)
+
+Yêu cầu:
+- Chỉ trả về một mảng JSON hợp lệ, không kèm giải thích, văn bản hay bình luận.
+
+Ví dụ đầu ra mong muốn:
+[
+    {{
+        "dividend": "34568",
+        "divisor": "6",
+        "quotient": "5761",
+        "step_offsets":[
+            ("45", 1),
+            ("36", 2),
+            ("08", 3),
+            ("2", 4)
+        ],
+        "remainder": "2",
+        "title": "A."
+    }},
+    {{
+        "dividend"="178675",
+        "divisor"="5",
+        "quotient"="35732",
+        "step_offsets"=[
+            ("28", 1),
+            ("36", 2),
+            ("17", 3),
+            ("25", 4),
+            ("0", 5)
+        ],
+        "remainder"="5",
+        "title"="B."
+    }},
+    {{
+        "dividend"="77965",
+        "divisor"="6",
+        "quotient"="1299",
+        "step_offsets"=[
+            ("17", 0),
+            ("59", 1),
+            ("56", 2),
+            ("25", 3)
+        ],
+        "remainder"="25",
+        "title"="C."
     }}
 ]
 """
