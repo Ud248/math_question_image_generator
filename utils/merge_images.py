@@ -1,7 +1,7 @@
 import os
 from PIL import Image
 
-def merge_images(image_files, output_filename="merged.png", direction="horizontal", gap=20):
+def merge_images(image_files, output_filename="merged.png", direction="horizontal", gap=10):
     """
     Ghép nhiều ảnh lại thành một ảnh duy nhất
     
@@ -51,7 +51,6 @@ def merge_images(image_files, output_filename="merged.png", direction="horizonta
             y_offset += img.height + gap
     
     # Lưu ảnh ghép
-    merged.save(output_filename, dpi=(150, 150))
-    print(f"✅ Đã ghép ảnh thành công: {output_filename}")
+    merged.save(output_filename, dpi=(300, 300))
     merged.show()
     

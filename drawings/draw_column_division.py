@@ -9,34 +9,36 @@ from utils.merge_images import merge_images
 def draw_column_division(dividend, divisor, quotient, step_offsets, remainder=None, title="",
                       figsize=(10, 8), start_row=8, start_col=1, filename="single_column_division_output.png"):
     """
-    Draw long division according to Vietnamese elementary school textbook style
-    
-    Parameters:
+    Vẽ phép chia cột theo phong cách sách giáo khoa Tiểu học Việt Nam.
+
+    Các tham số:
     -----------
     dividend : str
-        The dividend (e.g., "34568")
+        Số bị chia (ví dụ: "34568")
     divisor : str
-        The divisor (e.g., "6")
+        Số chia (ví dụ: "6")
     quotient : str
-        The quotient (e.g., "5761")
+        Thương (ví dụ: "5761")
     step_offsets : list of tuple
-        List of intermediate steps with offsets
-        Each element is a tuple (value, offset)
-        Example: [("45", 1), ("36", 2), ("08", 3), ("2", 4)]
-        offset: negative = left, positive = right, 0 = aligned
+        Danh sách các bước chia trung gian kèm vị trí lệch
+        Mỗi phần tử là một tuple (giá trị, vị trí lệch)
+        Ví dụ: [("45", 1), ("36", 2), ("08", 3), ("2", 4)]
+        offset: số âm = lệch trái, số dương = lệch phải, 0 = thẳng hàng
     remainder : str, optional
-        The remainder (if any)
-    title : str - Tiêu đề
+        Số dư (nếu có)
+    title : str
+        Tiêu đề
     figsize : tuple
-        Figure size
+        Kích thước hình vẽ
     start_row : int
-        Starting row (counted from bottom)
+        Dòng bắt đầu (tính từ dưới lên)
     start_col : int
-        Starting column
-    
-    Returns:
-    --------
-    fig, ax : matplotlib figure and axes
+        Cột bắt đầu
+
+    Trả về:
+    -------
+    filename: str
+        Tên file hình ảnh đã lưu
     """
     
     # Set up figure and axes
@@ -44,7 +46,7 @@ def draw_column_division(dividend, divisor, quotient, step_offsets, remainder=No
 
     # Grid cell size - adjusted for 0.3 spacing
     cell_size = 0.3
-    grid_width = max(12, (len(dividend) + len(divisor) + len(remainder) + len(quotient) + 4) * cell_size)
+    grid_width = max(10, (len(dividend) + len(divisor) + len(remainder) + len(quotient) + 2) * cell_size)
     grid_height = max(10, start_row + 3)
     
     # 1. Write dividend (top row, left side)
@@ -115,7 +117,8 @@ def draw_column_division(dividend, divisor, quotient, step_offsets, remainder=No
     ax.axis('off')
     plt.tight_layout()
     
-    plt.savefig(filename, dpi=150)
+    plt.savefig(filename, dpi=300)
+    return filename
 
 def draw_column_division_with_json_input(json_input, output_file='column_division_output.png'):
     """
@@ -156,9 +159,9 @@ def draw_column_division_with_json_input(json_input, output_file='column_divisio
         for img in images:
             if os.path.exists(img):
                 os.remove(img)
-        print(f"Đã lưu hình ảnh: {output_file}")
+        print(f"✅ Đã lưu hình ảnh: {output_file}")
     else:
-        print("Không có ảnh để ghép.")
+        print("❌ Không có ảnh để ghép.")
 
 if __name__ == "__main__":
     # Example 1: 34568 : 6 = 5761 (remainder 2)

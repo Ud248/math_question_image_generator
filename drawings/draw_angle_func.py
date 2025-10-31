@@ -9,7 +9,7 @@ import math
 from utils.normalize_angles_data import normalize_angles_data
 
 def draw_angle(angle_deg, vertex_name='O', ray1_name='A', ray2_name='B', vertex_label_color='black',
-               ray1_color='blue', ray2_color='red',output_file='angle.png'):
+               ray1_color='blue', ray2_color='red',output_file='angle.png', draw_arc = False):
     """
     Vẽ góc đơn giản - chỉ cần góc và tên các tia
 
@@ -22,6 +22,7 @@ def draw_angle(angle_deg, vertex_name='O', ray1_name='A', ray2_name='B', vertex_
         ray1_color (str): Màu tia thứ nhất, ví dụ: 'blue', 'red', '#FF5733'
         ray2_color (str): Màu tia thứ hai, ví dụ: 'red', 'green', '#33FF57'
         output_file (str): Tên file output, ví dụ: 'angle.png'
+        draw_arc (bol): Có vẽ cung tròn biểu diễn dộ góc hay không, mặc định là không
 
     Returns:
         str: Đường dẫn file đã lưu
@@ -58,32 +59,37 @@ def draw_angle(angle_deg, vertex_name='O', ray1_name='A', ray2_name='B', vertex_
             color=ray2_color, lw=2.5, label=f'Tia {vertex_name}{ray2_name}')
 
     # Vẽ các điểm
-    ax.scatter([vertex[0]], [vertex[1]], s=40, c='black', zorder=5)
-    ax.scatter([point1[0]], [point1[1]], s=40, c=ray1_color, zorder=5)
-    ax.scatter([point2[0]], [point2[1]], s=40, c=ray2_color, zorder=5)
+    ax.scatter([vertex[0]], [vertex[1]], s=40, c=vertex_label_color, zorder=5)
+    ax.scatter([point1[0]], [point1[1]], s=40, c=vertex_label_color, zorder=5)
+    ax.scatter([point2[0]], [point2[1]], s=40, c=vertex_label_color, zorder=5)
 
     # Đặt nhãn cho các điểm
     ax.text(point1[0] + 0.05, point1[1] - 0.05, ray1_name,
             fontsize=14, fontweight='bold', color=vertex_label_color)
-    ax.text(vertex[0] - 0.08, vertex[1] - 0.08, vertex_name,
+    ax.text(vertex[0] - 0.08, vertex[1] - 0.12, vertex_name,
             fontsize=14, fontweight='bold', color=vertex_label_color)
-    ax.text(point2[0] + 0.05, point2[1] + 0.03, ray2_name,
-            fontsize=14, fontweight='bold', color=vertex_label_color)
+    if angle_deg < 90:
+        ax.text(point2[0] + 0.05, point2[1] + 0.03, ray2_name,
+                fontsize=14, fontweight='bold', color=vertex_label_color)
+    else:
+        ax.text(point2[0] - 0.05, point2[1] + 0.08, ray2_name,
+                fontsize=14, fontweight='bold', color=vertex_label_color)
 
-    # Vẽ cung tròn biểu diễn góc
-    theta = np.linspace(0, angle_rad, 120)
-    ax.plot(arc_radius * np.cos(theta),
-            arc_radius * np.sin(theta),
-            color='green', lw=2.5)
+    if draw_arc:
+        # Vẽ cung tròn biểu diễn góc
+        theta = np.linspace(0, angle_rad, 120)
+        ax.plot(arc_radius * np.cos(theta),
+                arc_radius * np.sin(theta),
+                color='green', lw=2.5)
 
-    # Nhãn góc ở giữa cung
-    mid_angle = angle_rad / 2
-    label_x = arc_radius * math.cos(mid_angle) + 0.08
-    label_y = arc_radius * math.sin(mid_angle) + 0.03
-    ax.text(label_x, label_y, f"{angle_deg}°",
-            fontsize=13, fontweight='bold', color='green',
-            bbox=dict(boxstyle='round,pad=0.3', facecolor='white',
-                      edgecolor='green', alpha=0.8))
+        # Nhãn góc ở giữa cung
+        mid_angle = angle_rad / 2
+        label_x = arc_radius * math.cos(mid_angle) + 0.08
+        label_y = arc_radius * math.sin(mid_angle) + 0.03
+        ax.text(label_x, label_y, f"{angle_deg}°",
+                fontsize=13, fontweight='bold', color='green',
+                bbox=dict(boxstyle='round,pad=0.3', facecolor='white',
+                        edgecolor='green', alpha=0.8))
 
     # Tính toán xlim và ylim dynamic dựa trên tất cả các điểm
     margin = 0.2
@@ -105,8 +111,8 @@ def draw_angle(angle_deg, vertex_name='O', ray1_name='A', ray2_name='B', vertex_
     fig.savefig(output_file, bbox_inches='tight', dpi=150, transparent=True)
     plt.close(fig)
 
-    print(f"✓ Đã vẽ góc {vertex_name}{ray1_name}{ray2_name} = {angle_deg}°")
-    print(f"✓ File: {output_file}")
+    print(f"✅ Đã vẽ góc {vertex_name}{ray1_name}{ray2_name} = {angle_deg}°")
+    print(f"📁 File: {output_file}")
     return output_file
 
 def draw_multiple_angles(angles_data, output_prefix='angle'):
@@ -147,10 +153,10 @@ def draw_multiple_angles(angles_data, output_prefix='angle'):
         color1 = data.get('ray1_color', 'blue')
         color2 = data.get('ray2_color', 'red')
         vertex_label_color = data.get('vertex_label_color', 'black')
+        draw_arc = data.get('draw_arc', False)
 
         output_file = f"{output_prefix}_{vertex}{ray1}{ray2}_{angle}.png"
-
-        draw_angle(angle, vertex, ray1, ray2, vertex_label_color, color1, color2, output_file)
+        draw_angle(angle, vertex, ray1, ray2, vertex_label_color, color1, color2, output_file, draw_arc)
         files.append(output_file)
 
     return files
@@ -162,8 +168,7 @@ def draw_angles_from_json(angles_data):
     Args:
         angles_data: Dict (1 góc) hoặc List of dict (nhiều góc)
     """
-    # ✅ Chuẩn hóa data thành list
-    angles_list = normalize_angles_data(angles_data)
+    angles_list = angles_data
     
     if not angles_list:
         print("❌ No valid angle data to draw")
@@ -185,7 +190,8 @@ def draw_angles_from_json(angles_data):
                 ray2_name=angle_info.get('ray2_name'),
                 vertex_label_color=angle_info.get('vertex_label_color'),
                 ray1_color=angle_info.get('ray1_color'),
-                ray2_color=angle_info.get('ray2_color')
+                ray2_color=angle_info.get('ray2_color'),
+                draw_arc=angle_info.get('draw_arc')
             )
             print("✅ Single angle drawn successfully!")
             return fig

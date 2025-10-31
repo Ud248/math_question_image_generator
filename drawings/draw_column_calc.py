@@ -1,8 +1,6 @@
 import matplotlib.pyplot as plt
-import matplotlib.patches as patches
 from matplotlib.patches import Rectangle
 from utils.merge_images import merge_images
-from PIL import Image
 import os
 import json
 
@@ -123,7 +121,7 @@ def draw_column_calc(num1, num2, operator, result, offset=0,
     
     # Lưu file
     plt.tight_layout()
-    plt.savefig(filename, dpi=150, bbox_inches='tight', 
+    plt.savefig(filename, dpi=300, bbox_inches='tight', 
                facecolor='white' if bg_style == "white" else None)
     print(f"Đã lưu hình ảnh: {filename}")
 

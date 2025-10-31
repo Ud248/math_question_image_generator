@@ -65,11 +65,17 @@ class DeepSeekService:
         if not text:
             return None
         # Find the start of the JSON block
-        json_start = text.find('{')
-        if json_start == -1:
+        json_start_obj = text.find('{')
+        json_start_array = text.find('[')
+        if json_start_obj == -1 and json_start_array == -1:
             return None
-        # Find the end of the JSON block
-        json_end = text.rfind('}')
+        # Choose the earliest start
+        if json_start_obj == -1 or (json_start_array != -1 and json_start_array < json_start_obj):
+            json_start = json_start_array
+            json_end = text.rfind(']')
+        else:
+            json_start = json_start_obj
+            json_end = text.rfind('}')
         if json_end == -1 or json_end < json_start:
             return None
         # Extract and return the JSON string

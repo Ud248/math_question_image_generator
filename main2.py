@@ -1,8 +1,8 @@
 import asyncio
 from llm.local_search import DeepSeekService
+from llm.prompt_templates import EXTRACT_DATA_DRAW_CIRCLE_PROMPT
 from drawings.draw_circle import draw_circles_with_json_input
 from utils.parse_json_response import parse_json_response
-from prompts import EXTRACT_DATA_DRAW_CIRCLE_PROMPT
 
 async def main():
     TYPE_EXERCISE = "Hoàn thành dãy số"
@@ -41,14 +41,6 @@ async def main():
     
     try:
         print(f"\n📝 JSON Mode: {'ON' if json_mode else 'OFF'}")
-        print(f"\n💬 Generated Prompt:")
-        print("-" * 60)
-        print(f"Loại bài: {TYPE_EXERCISE.strip()}")
-        print(f"Tên bài học: {UNIT.strip()}")
-        print(f"Mô tả hình vẽ: {DETAIL.strip()}")
-        print("-" * 60)
-        
-        print("\n⏳ Generating response from LLM...")
         response = await service.generate_message(prompt, is_json_mode=json_mode)
         
         print("\n" + "=" * 60)

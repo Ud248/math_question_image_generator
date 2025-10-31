@@ -1,8 +1,8 @@
 import asyncio
 from llm.local_search import DeepSeekService
+from llm.prompt_templates import EXTRACT_DATA_DRAW_COLUMN_DIVISION_PROMPT
 from drawings.draw_column_division import draw_column_division_with_json_input
 from utils.parse_json_response import parse_json_response
-from prompts import EXTRACT_DATA_DRAW_COLUMN_DIVISION_PROMPT
 
 async def main():
     TYPE_EXERCISE = "Tính"
@@ -54,14 +54,7 @@ async def main():
     
     try:
         print(f"\n📝 JSON Mode: {'ON' if json_mode else 'OFF'}")
-        print(f"\n💬 Generated Prompt:")
-        print("-" * 60)
-        print(f"Loại bài: {TYPE_EXERCISE.strip()}")
-        print(f"Đề bài: {QUESTION.strip()}")
-        print(f"Mô tả hình vẽ: {DETAIL.strip()}")
-        print("-" * 60)
-        
-        print("\n⏳ Generating response from LLM...")
+
         response = await service.generate_message(prompt, is_json_mode=json_mode)
         
         print("\n" + "=" * 60)
@@ -85,15 +78,6 @@ async def main():
             print(response)
         
         print("=" * 60)
-        
-        # Print statistics
-        print("\n📊 Call Statistics")
-        print("-" * 60)
-        stats = service.get_call_stats()
-        print(f"Total calls: {stats['total_calls']}")
-        print(f"Total time: {stats['total_time']:.2f}s")
-        print(f"Average duration: {stats['average_duration']:.2f}s")
-        print(f"Model: {stats['model']}")
         
     except Exception as e:
         print(f"\n❌ Error: {str(e)}")
