@@ -6,7 +6,6 @@ Yêu cầu: matplotlib, numpy
 import matplotlib.pyplot as plt
 import numpy as np
 import math
-from utils.normalize_angles_data import normalize_angles_data
 
 def draw_angle(angle_deg, vertex_name='O', ray1_name='A', ray2_name='B', vertex_label_color='black',
                ray1_color='blue', ray2_color='red',output_file='angle.png', draw_arc = False):
